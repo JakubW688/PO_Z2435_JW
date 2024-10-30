@@ -1,9 +1,17 @@
 class Point {
-    double x, y;
+    int x;
+    double y;
 
-    public Point(double x, double y) {
+    public Point(int x, double y) {
         this.x = x;
         this.y = y;
+    try {
+        double z = this.x / 0;
+
+    }
+        catch(Exception e){
+            System.out.println("Coś jest nie tak");
+        }
     }
 
 
@@ -22,21 +30,32 @@ class Point {
     }
 }
 
-class Circle {
+class Circle extends Shape {
+    private Point Point;
     Point center;
     double radius;
 
-    public Circle(Point center, double radius) {
+    public double Circle(double radius) {
         this.center = center;
         this.radius = radius;
+        try {
+            if (radius * 2 < 1) {
+                throw new BadShapeTwoException("Średnica musi być większa lub równa 1.");
+            }
+        } catch (BadShapeTwoException e) {
+            System.err.println("Błąd: " + e.getMessage());
+        }
+        finally {
+            System.out.println("Praca zakończona.");
+        }
+        double area;
+        {
+            return Math.PI * radius * radius;
+        }
     }
 
+    @Override
     public double area() {
-        return Math.PI * radius * radius;
-    }
-
-    public double circumference() {
-        return 2 * Math.PI * radius;
+        return 0;
     }
 }
-

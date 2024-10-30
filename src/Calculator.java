@@ -3,7 +3,7 @@ public class Calculator {
         return shape1.area() + shape2.area();
     }
     public static void main(String[] args){
-        Circle circle = new Circle(5);
+        Circle circle = new Circle();
         Square square = new Square((double) 4.0);
         Triangle triangle = new Triangle(3, 4, 6, 7);
         Calculator calculator = new Calculator();
