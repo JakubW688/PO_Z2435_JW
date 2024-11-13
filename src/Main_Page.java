@@ -105,6 +105,7 @@ public class Main_Page {
         loginButton.setFont(new Font("Serif", Font.PLAIN,20));
         panel.add(loginButton);
         return panel;
+
     }
 
     public static void main(String[] args) {

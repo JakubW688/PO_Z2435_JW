@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,9 +16,10 @@ class LoginAction implements ActionListener {
         String userValue = textField1.getText();
         String passValue = textField2.getText();
 
-        if (userValue.equals("admin") && passValue.equals("jakub7331")) {
+        if (userValue.equals("admin") && passValue.equals("admin")) {
             NewPage page = new NewPage();
             page.setVisible(true);
+
         } else {
             System.out.println("Nazwa użytkownika lub hasło jest nieprawidłowe");
             JOptionPane.showMessageDialog(null, "Nazwa użytkownika lub hasło jest nieprawidłowe");

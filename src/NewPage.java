@@ -12,7 +12,7 @@ public class NewPage extends JFrame {
     public static final String RETURN_BUTTON = "Wróć";
 
 
-    class BACKGROUND_FRAME2 extends JFrame {
+    class Background_Frame extends JFrame {
         private BufferedImage backgroundImage2;
 
         public BACKGROUND_FRAME2() {
@@ -45,7 +45,4 @@ public class NewPage extends JFrame {
             }
         }
     }
-
-
-
 }
