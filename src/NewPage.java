@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -9,40 +7,43 @@ import java.io.IOException;
 
 public class NewPage extends JFrame {
     public static final String FRAME_TITLE_2 = "Magazyn";
-    public static final String RETURN_BUTTON = "Wróć";
 
+    public NewPage() {
+        setTitle(FRAME_TITLE_2);
+        setSize(800, 800);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    class Background_Frame extends JFrame {
-        private BufferedImage backgroundImage2;
-
-        public BACKGROUND_FRAME2() {
-            try {
-                backgroundImage2 = ImageIO.read(new File("Images/tło.png"));
-            } catch (IOException e) {
-                System.err.println("Błąd wczytywania obrazu tła: " + e.getMessage());
-                System.exit(1);
-            }
-            setTitle(FRAME_TITLE_2);
-            setSize(800, 800);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-            BackgroundPanel backgroundPanel = new BackgroundPanel();
-            backgroundPanel.setLayout(new BorderLayout());
+        try {
+            BackgroundPanel backgroundPanel = new BackgroundPanel("Images/tło.png");
             backgroundPanel.setLayout(null);
             setContentPane(backgroundPanel);
+        } catch (IOException e) {
+            System.err.println("Błąd wczytywania obrazu tła: " + e.getMessage());
+            System.exit(1);
+        }
+    }
 
+    private static class BackgroundPanel extends JPanel {
+        private BufferedImage backgroundImage;
 
+        public BackgroundPanel(String imagePath) throws IOException {
+            backgroundImage = ImageIO.read(new File(imagePath));
         }
 
-        private class BackgroundPanel extends JPanel {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (backgroundImage2 != null) {
-                    g.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), this);
-                }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         }
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            NewPage frame = new NewPage();
+            frame.setVisible(true);
+        });
+    }
 }
+
