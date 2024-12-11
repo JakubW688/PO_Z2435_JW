@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class NewPage extends JFrame {
-    public static final String FRAME_TITLE_2 = "Magazyn";
+    public static final String FRAME_TITLE_2 = "";
 
     public NewPage() {
         setTitle(FRAME_TITLE_2);
@@ -16,11 +16,47 @@ public class NewPage extends JFrame {
         try {
             BackgroundPanel backgroundPanel = new BackgroundPanel("Images/tło.png");
             backgroundPanel.setLayout(null);
+
+            JLabel pageTitle = new JLabel(FRAME_TITLE_2, SwingConstants.CENTER);
+            pageTitle.setFont(new Font("Serif", Font.PLAIN, 24));
+            pageTitle.setForeground(Color.WHITE);
+            pageTitle.setBounds(0, 10, 800, 30);
+            backgroundPanel.add(pageTitle);
+
+            JLabel categoryLabel = new JLabel("Kategorie", SwingConstants.CENTER);
+            categoryLabel.setFont(new Font("Serif", Font.PLAIN, 18));
+            categoryLabel.setForeground(Color.BLACK);
+            categoryLabel.setBounds(0, 50, 800, 30);
+            backgroundPanel.add(categoryLabel);
+
+            JButton button1 = new JButton("Konsole");
+            button1.setBounds(300, 300, 200, 40);
+            button1.addActionListener(e -> openNewPage("Konsole"));
+            backgroundPanel.add(button1);
+
+            JButton button2 = new JButton("Gry");
+            button2.setBounds(300, 360, 200, 40);
+            button2.addActionListener(e -> openNewPage("Gry"));
+            backgroundPanel.add(button2);
+
             setContentPane(backgroundPanel);
         } catch (IOException e) {
             System.err.println("Błąd wczytywania obrazu tła: " + e.getMessage());
             System.exit(1);
         }
+    }
+
+    private void openNewPage(String pageTitle) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame newFrame = new JFrame(pageTitle);
+            newFrame.setSize(400, 400);
+            newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newFrame.setLocationRelativeTo(this);
+            JLabel label = new JLabel(pageTitle, SwingConstants.CENTER);
+            label.setFont(new Font("Serif", Font.PLAIN, 20));
+            newFrame.add(label);
+            newFrame.setVisible(true);
+        });
     }
 
     private static class BackgroundPanel extends JPanel {
@@ -46,4 +82,3 @@ public class NewPage extends JFrame {
         });
     }
 }
-
