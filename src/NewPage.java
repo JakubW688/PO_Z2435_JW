@@ -25,7 +25,7 @@ public class NewPage extends JFrame {
             pageTitle.setBounds(0, 10, 800, 30);
             backgroundPanel.add(pageTitle);
 
-            JLabel categoryLabel = new JLabel("", SwingConstants.CENTER);
+            JLabel categoryLabel = new JLabel(" ", SwingConstants.CENTER);
             categoryLabel.setFont(new Font("Serif", Font.PLAIN, 18));
             categoryLabel.setForeground(Color.BLACK);
             categoryLabel.setBounds(0, 50, 800, 30);
