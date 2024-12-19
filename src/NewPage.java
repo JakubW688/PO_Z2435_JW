@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.util.List;
+
 
 public class NewPage extends JFrame {
     public static final String FRAME_TITLE_2 = "Kategorie";
@@ -20,13 +22,13 @@ public class NewPage extends JFrame {
             backgroundPanel.setLayout(null);
 
             JLabel pageTitle = new JLabel(FRAME_TITLE_2, SwingConstants.CENTER);
-            pageTitle.setFont(new Font("Serif", Font.PLAIN, 24));
+            pageTitle.setFont(getFont(24));
             pageTitle.setForeground(Color.DARK_GRAY);
             pageTitle.setBounds(0, 10, 800, 30);
             backgroundPanel.add(pageTitle);
 
             JLabel categoryLabel = new JLabel("", SwingConstants.CENTER);
-            categoryLabel.setFont(new Font("Serif", Font.PLAIN, 18));
+            categoryLabel.setFont(getFont(18));
             categoryLabel.setForeground(Color.BLACK);
             categoryLabel.setBounds(0, 50, 800, 30);
             backgroundPanel.add(categoryLabel);
@@ -46,6 +48,10 @@ public class NewPage extends JFrame {
             System.err.println("Błąd wczytywania obrazu tła: " + e.getMessage());
             System.exit(1);
         }
+    }
+
+    private static Font getFont(int size) {
+        return new Font("Serif", Font.PLAIN, size);
     }
 
     private void openNewPage(String pageTitle, String backgroundImagePath, String databaseFilePath) {
@@ -78,7 +84,23 @@ public class NewPage extends JFrame {
                 menu.add(addItem);
 
                 JMenuItem searchItem = new JMenuItem("Wyszukaj produkt");
-                searchItem.addActionListener(e -> JOptionPane.showMessageDialog(newFrame, "Wyszukaj produkt: funkcja w przygotowaniu."));
+                searchItem.addActionListener(e -> {
+                    String searchTerm = JOptionPane.showInputDialog(newFrame, "Podaj frazę do wyszukania:");
+                    if (searchTerm != null && !searchTerm.isBlank()) {
+                        List<String> results = ProductSearch.searchInFile(searchTerm, databaseFilePath);
+                        if (results.isEmpty()) {
+                            JOptionPane.showMessageDialog(newFrame, "Brak wyników dla: " + searchTerm);
+                        } else {
+                            StringBuilder resultMessage = new StringBuilder("Znalezione wyniki:\n");
+                            for (String result : results) {
+                                resultMessage.append(result).append("\n");
+                            }
+                            JOptionPane.showMessageDialog(newFrame, resultMessage.toString());
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(newFrame, "Nie podano frazy do wyszukania.", "Błąd", JOptionPane.WARNING_MESSAGE);
+                    }
+                });
                 menu.add(searchItem);
 
                 JMenuItem refreshItem = new JMenuItem("Odśwież");
@@ -89,7 +111,7 @@ public class NewPage extends JFrame {
                 newFrame.setJMenuBar(menuBar);
 
                 JLabel label = new JLabel(pageTitle, SwingConstants.CENTER);
-                label.setFont(new Font("Serif", Font.PLAIN, 20));
+                label.setFont(getFont(20));
                 label.setBounds(50, 50, 300, 30);
                 backgroundPanel.add(label);
 
