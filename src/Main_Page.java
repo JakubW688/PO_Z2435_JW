@@ -6,45 +6,46 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import com.myapp.database.DatabaseHelper;
 
 public class Main_Page {
     public static final String FRAME_TITLE = "Projekt";
     public static final String CLOSE_BUTTON_TEXT = "Wyjście";
     public static final String LOGIN_BUTTON_TEXT = "Logowanie";
-
+    public static final String VIEW_PRODUCTS_BUTTON_TEXT = "Magazyn"; 
 
     class CreateLoginForm extends JFrame implements ActionListener{
         JButton b1;
         JPanel panel;
         JLabel userLabel, passLabel;
         JTextField textField1, textField2;
-    public CreateLoginForm(){
-        userLabel = new JLabel();
-        userLabel.setText("Nazwa użytkownika");
-        textField1 = new JTextField(15);
-        passLabel = new JLabel();
-        passLabel.setText("Hasło");
-        textField2 = new JTextField(15);
-        b1 = new JButton("Zaloguj");
-        b1.addActionListener(new LoginAction(textField1, textField2));
-        panel = new JPanel(new GridLayout(3,1));
-        panel.add(userLabel);
-        panel.add(textField1);
-        panel.add(passLabel);
-        panel.add(textField2);
-        panel.add(b1);
-        add(panel, BorderLayout.CENTER);
-        setTitle("Logowanie");
-        setSize(300,150);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    }
+        public CreateLoginForm(){
+            userLabel = new JLabel();
+            userLabel.setText("Nazwa użytkownika");
+            textField1 = new JTextField(15);
+            passLabel = new JLabel();
+            passLabel.setText("Hasło");
+            textField2 = new JTextField(15);
+            b1 = new JButton("Zaloguj");
+            b1.addActionListener(new LoginAction(textField1, textField2));
+            panel = new JPanel(new GridLayout(3,1));
+            panel.add(userLabel);
+            panel.add(textField1);
+            panel.add(passLabel);
+            panel.add(textField2);
+            panel.add(b1);
+            add(panel, BorderLayout.CENTER);
+            setTitle("Logowanie");
+            setSize(300,150);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
         }
     }
+
     public static class BackgroundFrame extends JFrame {
         private BufferedImage backgroundImage;
 
@@ -76,6 +77,9 @@ public class Main_Page {
             loginControlPanel.setBounds(1,getHeight()-450, getWidth(),300);
             backgroundPanel.add(loginControlPanel);
             setVisible(true);
+
+
+            DatabaseHelper.initializeDatabase();
         }
 
         private class BackgroundPanel extends JPanel {
@@ -88,6 +92,7 @@ public class Main_Page {
             }
         }
     }
+
     private static JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -95,8 +100,16 @@ public class Main_Page {
         closeButton.addActionListener(e -> System.exit(0));
         closeButton.setFont(new Font("Serif", Font.PLAIN,15));
         panel.add(closeButton);
+
+        JButton viewProductsButton = new JButton(VIEW_PRODUCTS_BUTTON_TEXT);
+        viewProductsButton.addActionListener(e -> {
+            String allProducts = DatabaseHelper.getAllProducts();
+            JOptionPane.showMessageDialog(null, allProducts.isEmpty() ? "Brak produktów w bazie danych" : allProducts);
+        });
+        panel.add(viewProductsButton);
         return panel;
     }
+
     private static JPanel createLoginPanel(){
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -105,12 +118,9 @@ public class Main_Page {
         loginButton.setFont(new Font("Serif", Font.PLAIN,20));
         panel.add(loginButton);
         return panel;
-
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(BackgroundFrame::new);
-
+        SwingUtilities.invokeLater(BackgroundFrame::new);  // Uruchomienie aplikacji
     }
-
 }

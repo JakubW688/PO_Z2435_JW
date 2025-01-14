@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.util.List;
+import com.myapp.database.DatabaseHelper;
+
+
 
 
 public class NewPage extends JFrame {
@@ -71,12 +73,16 @@ public class NewPage extends JFrame {
                 JMenuItem addItem = new JMenuItem("Dodaj produkt");
                 addItem.addActionListener(e -> {
                     String productName = JOptionPane.showInputDialog(newFrame, "Podaj nazwę produktu:");
-                    String productPrice = JOptionPane.showInputDialog(newFrame, "Podaj cenę");
+                    String productPrice = JOptionPane.showInputDialog(newFrame, "Podaj cenę:");
 
                     if (productName != null && productPrice != null && !productName.isBlank() && !productPrice.isBlank()) {
-                        String entry = productName + "  ;  " + productPrice;
-                        saveToFile(entry, databaseFilePath);
-                        JOptionPane.showMessageDialog(newFrame, "Produkt dodany pomyślnie!");
+                        try {
+                            double price = Double.parseDouble(productPrice);
+                            DatabaseHelper.saveProduct(productName, price);
+                            JOptionPane.showMessageDialog(newFrame, "Produkt dodany pomyślnie!");
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(newFrame, "Cena musi być liczbą.", "Błąd", JOptionPane.WARNING_MESSAGE);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(newFrame, "Nie podano nazwy lub ceny produktu!", "Błąd", JOptionPane.WARNING_MESSAGE);
                     }
@@ -86,27 +92,14 @@ public class NewPage extends JFrame {
                 JMenuItem searchItem = new JMenuItem("Wyszukaj produkt");
                 searchItem.addActionListener(e -> {
                     String searchTerm = JOptionPane.showInputDialog(newFrame, "Podaj frazę do wyszukania:");
-                    if (searchTerm != null && !searchTerm.isBlank()) {
-                        List<String> results = ProductSearch.searchInFile(searchTerm, databaseFilePath);
-                        if (results.isEmpty()) {
-                            JOptionPane.showMessageDialog(newFrame, "Brak wyników dla: " + searchTerm);
-                        } else {
-                            StringBuilder resultMessage = new StringBuilder("Znalezione wyniki:\n");
-                            for (String result : results) {
-                                resultMessage.append(result).append("\n");
-                            }
-                            JOptionPane.showMessageDialog(newFrame, resultMessage.toString());
-                        }
-                    } else {
+                    if (searchTerm == null || searchTerm.isBlank()) {
                         JOptionPane.showMessageDialog(newFrame, "Nie podano frazy do wyszukania.", "Błąd", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        String results = DatabaseHelper.searchProducts(searchTerm);
+                        JOptionPane.showMessageDialog(newFrame, results.isEmpty() ? "Brak wyników dla: " + searchTerm : results);
                     }
                 });
                 menu.add(searchItem);
-
-                JMenuItem refreshItem = new JMenuItem("Odśwież");
-                refreshItem.addActionListener(e -> JOptionPane.showMessageDialog(newFrame, "Odśwież: funkcja w przygotowaniu."));
-                menu.add(refreshItem);
-
                 menuBar.add(menu);
                 newFrame.setJMenuBar(menuBar);
 
