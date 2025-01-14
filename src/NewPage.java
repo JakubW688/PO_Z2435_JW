@@ -6,7 +6,13 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import com.myapp.database.DatabaseHelper;
+import com.myapp.utils.PriceCalculator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Date;
+
 
 
 
@@ -28,6 +34,14 @@ public class NewPage extends JFrame {
             pageTitle.setForeground(Color.DARK_GRAY);
             pageTitle.setBounds(0, 10, 800, 30);
             backgroundPanel.add(pageTitle);
+
+            JLabel dateTimeLabel = new JLabel(); // Label for date and time
+            dateTimeLabel.setFont(getFont(14));
+            dateTimeLabel.setForeground(Color.BLACK);
+            dateTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            dateTimeLabel.setBounds(600, 10, 180, 30);
+            updateDateTime(dateTimeLabel);
+            backgroundPanel.add(dateTimeLabel);
 
             JLabel categoryLabel = new JLabel("", SwingConstants.CENTER);
             categoryLabel.setFont(getFont(18));
@@ -55,7 +69,18 @@ public class NewPage extends JFrame {
     private static Font getFont(int size) {
         return new Font("Serif", Font.PLAIN, size);
     }
-
+    private void updateDateTime(JLabel label) {
+        Timer timer = new Timer();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(() -> {
+                    label.setText(formatter.format(new Date()));
+                });
+            }
+        }, 0, 1000);
+    }
     private void openNewPage(String pageTitle, String backgroundImagePath, String databaseFilePath) {
         SwingUtilities.invokeLater(() -> {
             JFrame newFrame = new JFrame(pageTitle);
@@ -73,13 +98,14 @@ public class NewPage extends JFrame {
                 JMenuItem addItem = new JMenuItem("Dodaj produkt");
                 addItem.addActionListener(e -> {
                     String productName = JOptionPane.showInputDialog(newFrame, "Podaj nazwę produktu:");
-                    String productPrice = JOptionPane.showInputDialog(newFrame, "Podaj cenę:");
+                    String productPrice = JOptionPane.showInputDialog(newFrame, "Podaj cenę netto:");
 
                     if (productName != null && productPrice != null && !productName.isBlank() && !productPrice.isBlank()) {
                         try {
-                            double price = Double.parseDouble(productPrice);
-                            DatabaseHelper.saveProduct(productName, price);
-                            JOptionPane.showMessageDialog(newFrame, "Produkt dodany pomyślnie!");
+                            double nettoPrice = Double.parseDouble(productPrice);
+                            double grossPrice = PriceCalculator.calculateGrossPrice(nettoPrice);
+                            DatabaseHelper.saveProductWithGrossPrice(productName, nettoPrice, grossPrice);
+                            JOptionPane.showMessageDialog(newFrame, String.format("Produkt dodany pomyślnie!\nNazwa: %s\nCena netto: %.2f PLN\nCena brutto: %.2f PLN", productName, nettoPrice, grossPrice));
                         } catch (NumberFormatException ex) {
                             JOptionPane.showMessageDialog(newFrame, "Cena musi być liczbą.", "Błąd", JOptionPane.WARNING_MESSAGE);
                         }
@@ -87,7 +113,25 @@ public class NewPage extends JFrame {
                         JOptionPane.showMessageDialog(newFrame, "Nie podano nazwy lub ceny produktu!", "Błąd", JOptionPane.WARNING_MESSAGE);
                     }
                 });
+
+
                 menu.add(addItem);
+
+                JMenuItem removeItem = new JMenuItem("Usuń produkt");
+                removeItem.addActionListener(e -> {
+                    String productNameToDelete = JOptionPane.showInputDialog(newFrame, "Podaj nazwę produktu do usunięcia:");
+                    if (productNameToDelete == null || productNameToDelete.isBlank()) {
+                        JOptionPane.showMessageDialog(newFrame, "Nie podano nazwy produktu.", "Błąd", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        boolean isDeleted = DatabaseHelper.deleteProduct(productNameToDelete);
+                        if (isDeleted) {
+                            JOptionPane.showMessageDialog(newFrame, "Produkt usunięty pomyślnie!");
+                        } else {
+                            JOptionPane.showMessageDialog(newFrame, "Nie znaleziono produktu o nazwie: " + productNameToDelete, "Błąd", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                });
+                menu.add(removeItem);
 
                 JMenuItem searchItem = new JMenuItem("Wyszukaj produkt");
                 searchItem.addActionListener(e -> {
@@ -143,6 +187,7 @@ public class NewPage extends JFrame {
     }
 
     public static void main(String[] args) {
+        DatabaseHelper.initializeDatabase();
         SwingUtilities.invokeLater(() -> {
             NewPage frame = new NewPage();
             frame.setVisible(true);

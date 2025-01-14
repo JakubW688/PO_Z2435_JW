@@ -1,3 +1,5 @@
 test  ;  111
 PS5   ;  2330 ZŁ
 PS5  ;  1230 ZŁ
+Nintendo ds   ;  199 zł
+djsnds  ;  123

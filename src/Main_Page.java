@@ -121,6 +121,6 @@ public class Main_Page {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(BackgroundFrame::new);  // Uruchomienie aplikacji
+        SwingUtilities.invokeLater(BackgroundFrame::new);
     }
 }
