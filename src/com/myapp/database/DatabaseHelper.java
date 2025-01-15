@@ -12,7 +12,7 @@ public class DatabaseHelper {
         String sql = """
             CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
+                name TEXT NOT NULL, 
                 netto_price REAL NOT NULL,
                 gross_price REAL NOT NULL
             );
