@@ -1,5 +1,4 @@
 package com.myapp.database;
-
 import java.sql.*;
 
 public class DatabaseHelper {
@@ -24,39 +23,6 @@ public class DatabaseHelper {
             System.err.println("Błąd podczas inicjalizacji bazy danych: " + e.getMessage());
         }
     }
-
-
-    public static void checkAndAddColumns() {
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-
-            ResultSet rs = stmt.executeQuery("PRAGMA table_info(products);");
-
-            boolean hasNettoPrice = false;
-            boolean hasGrossPrice = false;
-
-            while (rs.next()) {
-                String columnName = rs.getString("name");
-                if ("netto_price".equals(columnName)) {
-                    hasNettoPrice = true;
-                } else if ("gross_price".equals(columnName)) {
-                    hasGrossPrice = true;
-                }
-            }
-
-            if (!hasNettoPrice) {
-                stmt.executeUpdate("ALTER TABLE products ADD COLUMN netto_price REAL NOT NULL;");
-            }
-
-            if (!hasGrossPrice) {
-                stmt.executeUpdate("ALTER TABLE products ADD COLUMN gross_price REAL NOT NULL;");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Błąd podczas sprawdzania i dodawania kolumn: " + e.getMessage());
-        }
-    }
-
     public static String getAllProducts() {
         StringBuilder results = new StringBuilder();
         String sql = "SELECT * FROM products";

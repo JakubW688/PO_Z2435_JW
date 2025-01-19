@@ -18,21 +18,21 @@ public class Main_Page {
         JButton b1;
         JPanel panel;
         JLabel userLabel, passLabel;
-        JTextField textField1, textField2;
+        JTextField login, haslo;
         public CreateLoginForm(){
             userLabel = new JLabel();
             userLabel.setText("Nazwa użytkownika");
-            textField1 = new JTextField(15);
+            login = new JTextField(15);
             passLabel = new JLabel();
             passLabel.setText("Hasło");
-            textField2 = new JTextField(15);
+            haslo = new JTextField(15);
             b1 = new JButton("Zaloguj");
-            b1.addActionListener(new LoginAction(textField1, textField2));
+            b1.addActionListener(new LoginAction(login, haslo));
             panel = new JPanel(new GridLayout(3,1));
             panel.add(userLabel);
-            panel.add(textField1);
+            panel.add(login);
             panel.add(passLabel);
-            panel.add(textField2);
+            panel.add(haslo);
             panel.add(b1);
             add(panel, BorderLayout.CENTER);
             setTitle("Logowanie");

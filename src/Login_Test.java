@@ -4,18 +4,18 @@ import java.awt.event.ActionListener;
 
 
 class LoginAction implements ActionListener {
-    private JTextField textField1;
-    private JTextField textField2;
+    private JTextField login;
+    private JTextField haslo;
 
-    public LoginAction(JTextField textField1, JTextField textField2) {
-        this.textField1 = textField1;
-        this.textField2 = textField2;
+    public LoginAction(JTextField login, JTextField haslo) {
+        this.login = login;
+        this.haslo = haslo;
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        String userValue = textField1.getText();
-        String passValue = textField2.getText();
+        String userValue = login.getText();
+        String passValue = haslo.getText();
 
         if (userValue.equals("admin") && passValue.equals("admin")) {
             NewPage page = new NewPage();
