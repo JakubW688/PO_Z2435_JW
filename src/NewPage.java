@@ -15,7 +15,7 @@ public class NewPage extends JFrame {
     private static final String FRAME_TITLE = "Kategorie";
     private static final int FRAME_WIDTH = 800;
     private static final int FRAME_HEIGHT = 800;
-
+           //metoda
     public NewPage() {
         setTitle(FRAME_TITLE);
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -56,11 +56,9 @@ public class NewPage extends JFrame {
     private void addCategoryButtons(JPanel panel) {
         JButton button1 = createCategoryButton("Konsole", 300, 300, "Images/Konsole.png");
         JButton button2 = createCategoryButton("Gry", 300, 360, "Images/Gry.jpg");
-        JButton viewProductsButton = createCategoryButton("Magazyn",300,420,"Images/Gry.jpg");
 
         panel.add(button1);
         panel.add(button2);
-        panel.add(viewProductsButton);
     }
 
     private JButton createCategoryButton(String label, int x, int y, String imagePath) {
