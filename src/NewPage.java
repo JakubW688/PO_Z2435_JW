@@ -75,13 +75,18 @@ public class NewPage extends JFrame {
     private void updateDateTime(JLabel label) {
         Timer timer = new Timer();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        // Ustawiamy zadanie, które będzie wykonywane co sekundę
         timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
             public void run() {
-                SwingUtilities.invokeLater(() -> label.setText(formatter.format(new Date())));
+                // Zmieniamy tekst na etykiecie, aby pokazać aktualną datę i godzinę
+                SwingUtilities.invokeLater(() -> {
+                    label.setText(formatter.format(new Date()));
+                });
             }
         }, 0, 1000);
     }
+
 
     private void openNewPage(String pageTitle, String backgroundImagePath) {
         SwingUtilities.invokeLater(() -> {
