@@ -54,17 +54,19 @@ public class NewPage extends JFrame {
     }
 
     private void addCategoryButtons(JPanel panel) {
-        JButton button1 = createCategoryButton("Konsole", 300, 300, "Images/Konsole.png", "bazy_danych/baza_danych_konsole.txt");
-        JButton button2 = createCategoryButton("Gry", 300, 360, "Images/Gry.jpg", "bazy_danych/baza_danych_gry.txt");
+        JButton button1 = createCategoryButton("Konsole", 300, 300, "Images/Konsole.png");
+        JButton button2 = createCategoryButton("Gry", 300, 360, "Images/Gry.jpg");
+        JButton viewProductsButton = createCategoryButton("Magazyn",300,420,"Images/Gry.jpg");
 
         panel.add(button1);
         panel.add(button2);
+        panel.add(viewProductsButton);
     }
 
-    private JButton createCategoryButton(String label, int x, int y, String imagePath, String databasePath) {
+    private JButton createCategoryButton(String label, int x, int y, String imagePath) {
         JButton button = new JButton(label);
         button.setBounds(x, y, 200, 40);
-        button.addActionListener(e -> openNewPage(label, imagePath, databasePath));
+        button.addActionListener(e -> openNewPage(label, imagePath));
         return button;
     }
 
@@ -83,7 +85,7 @@ public class NewPage extends JFrame {
         }, 0, 1000);
     }
 
-    private void openNewPage(String pageTitle, String backgroundImagePath, String databaseFilePath) {
+    private void openNewPage(String pageTitle, String backgroundImagePath) {
         SwingUtilities.invokeLater(() -> {
             JFrame newFrame = new JFrame(pageTitle);
             newFrame.setSize(400, 400);
@@ -120,7 +122,6 @@ public class NewPage extends JFrame {
         JMenuItem searchItem = new JMenuItem("Wyszukaj produkt");
         searchItem.addActionListener(e -> searchProductAction(frame));
         menu.add(searchItem);
-
         menuBar.add(menu);
         frame.setJMenuBar(menuBar);
     }
@@ -145,19 +146,13 @@ public class NewPage extends JFrame {
             } catch (NumberFormatException ex) {
                 showError("Cena musi być liczbą.");
             }
-        } else {
-            showError("Nie podano nazwy lub ceny produktu!");
         }
     }
 
     private void removeProductAction(JFrame frame) {
         String productNameToDelete = JOptionPane.showInputDialog(frame, "Podaj nazwę produktu do usunięcia:");
-        if (productNameToDelete == null || productNameToDelete.isBlank()) {
-            showError("Nie podano nazwy produktu.");
-        } else if (DatabaseHelper.deleteProduct(productNameToDelete)) {
+         if (DatabaseHelper.deleteProduct(productNameToDelete)) {
             showMessage(frame, "Produkt usunięty pomyślnie!");
-        } else {
-            showError("Nie znaleziono produktu o nazwie: " + productNameToDelete);
         }
     }
 

@@ -4,7 +4,7 @@ import java.sql.*;
 public class DatabaseHelper {
     private static final String DATABASE_URL = "jdbc:sqlite:database.db";
 
-    public static Connection connect() throws SQLException {
+    private static Connection connectBase() throws SQLException {
         return DriverManager.getConnection(DATABASE_URL);
     }
     public static void initializeDatabase() {
@@ -16,7 +16,7 @@ public class DatabaseHelper {
                 gross_price REAL NOT NULL
             );
             """;
-        try (Connection conn = connect();
+        try (Connection conn = connectBase();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -27,7 +27,7 @@ public class DatabaseHelper {
         StringBuilder results = new StringBuilder();
         String sql = "SELECT * FROM products";
 
-        try (Connection conn = connect();
+        try (Connection conn = connectBase();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -47,12 +47,12 @@ public class DatabaseHelper {
 
     public static void saveProductWithGrossPrice(String name, double nettoPrice, double grossPrice) {
         String sql = "INSERT INTO products(name, netto_price, gross_price) VALUES(?, ?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            pstmt.setDouble(2, nettoPrice);
-            pstmt.setDouble(3, grossPrice);
-            pstmt.executeUpdate();
+        try (Connection conn = connectBase();
+             PreparedStatement zapytanie = conn.prepareStatement(sql)) {
+            zapytanie.setString(1, name);
+            zapytanie.setDouble(2, nettoPrice);
+            zapytanie.setDouble(3, grossPrice);
+            zapytanie.executeUpdate();
             System.out.println("Produkt dodany: " + name + ", Netto: " + nettoPrice + ", Brutto: " + grossPrice);
         } catch (SQLException e) {
             System.err.println("Błąd podczas zapisu do bazy danych: " + e.getMessage());
@@ -62,7 +62,7 @@ public class DatabaseHelper {
 
     public static boolean deleteProduct(String productName) {
         String sql = "DELETE FROM products WHERE name = ?";
-        try (Connection conn = connect();
+        try (Connection conn = connectBase();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, productName);
             int affectedRows = pstmt.executeUpdate();
@@ -76,7 +76,7 @@ public class DatabaseHelper {
     public static String searchProducts(String searchTerm) {
         StringBuilder results = new StringBuilder();
         String sql = "SELECT * FROM products WHERE name LIKE ?";
-        try (Connection conn = connect();
+        try (Connection conn = connectBase();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, "%" + searchTerm + "%");
             ResultSet rs = pstmt.executeQuery();
