@@ -6,7 +6,7 @@ import plyer
 import random
 from urllib.parse import urljoin
 
-# --- KONFIGURACJA ---
+
 NAZWA_PLIKU_ZAPISANYCH = "olx_zapisane_linki_elektronika.txt"
 CZAS_OCZEKIWANIA = 600
 LIMIT_OFERT_DO_MONITOROWANIA = 10
